@@ -5,7 +5,7 @@ Processing is currently set up for ACOM internal computer modeling1, change path
 
 ## Step 1:
 Download the base emissions of CO<sub>2</sub>.
-Use get_tracer.sh to download the CO<sub>2</sub> emissions for the dates of interest.
+Use ``get_tracer.sh`` to download the CO<sub>2</sub> emissions for the dates of interest.
 This downloads from 
 https://portal.nccs.nasa.gov/datashare/iesa/aerosol/emissions/QFED/v2.6r1/0.1/QFED
 
