@@ -10,4 +10,11 @@ This downloads from
 https://portal.nccs.nasa.gov/datashare/iesa/aerosol/emissions/QFED/v2.6r1/0.1/QFED
 
 ## Step 2:
+Convert CO2 emissions to all other species needed, using emission ratios determined from FINN emission factor tables and VOC speication tables. These have been aggregated into the four QFED vegetation types. Requires: \
+The downloaded QFED CO2 emissions from step 1, and:\
+``BASEEmissionFactors_20221227.csv`` \
+``VOC_EmissionSpeciation_20190318.csv`` \
+``species_molwts.txt`` \
+
+Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios.
 
