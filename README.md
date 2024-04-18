@@ -8,6 +8,7 @@ Download the base emissions of CO<sub>2</sub>.
 Use ``get_tracer.sh`` to download the CO<sub>2</sub> emissions for the dates of interest.
 This downloads from 
 https://portal.nccs.nasa.gov/datashare/iesa/aerosol/emissions/QFED/v2.6r1/0.1/QFED
+Remember to change paths as necessary.
 
 ## Step 2:
 Convert CO2 emissions to all other species needed, using emission ratios determined from FINN emission factor tables and VOC speication tables. These have been aggregated into the four QFED vegetation types. Requires: \
