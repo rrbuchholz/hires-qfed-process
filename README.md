@@ -1,5 +1,5 @@
 # hires-qfed-process
-Processing QFED fire emissions for use in CESM
+Processing QFED fire emissions for use in CESM.//
 This code converts QFED created emissions of CO2 at 0.1 degree resolution, into all species required for CESM/MUSICA simulations of atmospheric chemistry with full chemistry.
 Processing is currently set up for ACOM internal computer modeling1, change paths as necessary.
 
