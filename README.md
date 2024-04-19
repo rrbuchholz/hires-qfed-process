@@ -38,6 +38,7 @@ Summary of this processing step depending on tracer choice:\
 | --------------------------------|-------------------|
 |           OC1 50%, OC2 50%      |       OC          |
 |           CB1 80%, CB2 20%      |       BC          |
+
 |   create combined species       |     tracer choice |
 | --------------------------------|-------------------|
 |           bc_a4       = BC      |       BC          |
