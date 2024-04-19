@@ -34,4 +34,4 @@ Redistribute species based on distribution factors.\
 ;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl 
 
 ## Step 4:
-Upload to glade filesystem.
+Upload the 0.1 degree files to glade filesystem. Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.)
