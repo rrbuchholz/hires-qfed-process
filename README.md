@@ -35,8 +35,9 @@ Redistribute species based on distribution factors.\
 
 Summary of this processing step depending on tracer choice:\
 | - split OC or BC into 2 files:  |     tracer choice |
-;           OC1 50%, OC2 50%              OC\
-;           CB1 80%, CB2 20%              BC\
+| --------------------------------|-------------------|
+|           OC1 50%, OC2 50%      |       OC          |
+|           CB1 80%, CB2 20%      |       BC          |
 ;   - create combined species\
 ;           bc_a4       = BC              BC\
 ;           num_bc_a4                     BC\
