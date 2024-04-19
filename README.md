@@ -45,11 +45,13 @@ Summary of this processing step depending on tracer choice:\
 |           num_bc_a4             |       BC          |
 |           pom_a4      = 1.4 * OC|       OC          |
 |           num_pom_a4            |       OC          |
-|           SVOC        = combined|       VBS         |
-|           IVOC        = combined|       VBS         |
+|           SVOC        = combined|       VBS ***     |
+|           IVOC        = combined|       VBS ***     |
 |           SOAG        = combined|       SOAG        |
 |           so4_a1                |       SO4         |
 |           num_so4               |       SO4         |
+
+*** Needs to be split into 2 processing parts for highres.
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem. Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.)
