@@ -1,5 +1,5 @@
 ;=======================================================;
-;  redistribute_emiss.ncl
+;  redistribute_emiss_hires.ncl
 ;=======================================================;
 ;
 ; Concepts illustrated:
@@ -23,7 +23,7 @@
 ;   
 ;   To run type:
 ;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"' \
-;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl
+;             'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl
 ;
 ;   Requires:
 ;         emission file/s
