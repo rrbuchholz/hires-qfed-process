@@ -1,5 +1,5 @@
 # hires-qfed-process
-Processing QFED version 2.6 R1 fire emissions, created by NASA, for use in CESM. \
+Processing QFED version 2.6 R1 fire emissions, created by NASA, for use in CESM simulations with atmopsheirc chemistry. \
 This code converts QFED created emissions of CO<sub>2</sub> at 0.1 degree resolution, into all species required for CESM/MUSICA simulations of atmospheric chemistry with full chemistry.
 Processing is currently set up for ACOM internal computer modeling1, change paths as necessary.
 
