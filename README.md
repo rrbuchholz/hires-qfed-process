@@ -27,3 +27,11 @@ Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios
 ;   To run type {options in curly braces}: \
 ;         ncl {year=<value>} combine_qfed_finn_ers_hires.ncl
 
+## Step 3:
+Redistribute species based on distribution factors.\
+;   To run type:\
+;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"'  \\ \
+;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl \
+
+## Step 4:
+Upload to glade filesystem.
