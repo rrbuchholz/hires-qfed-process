@@ -34,7 +34,7 @@ Redistribute species based on distribution factors.\
 ;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl 
 
 Summary of this processing step depending on tracer choice:\
-;   - split OC or BC into 2 files:       tracer choice\
+| - split OC or BC into 2 files:  |     tracer choice |
 ;           OC1 50%, OC2 50%              OC\
 ;           CB1 80%, CB2 20%              BC\
 ;   - create combined species\
