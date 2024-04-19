@@ -25,7 +25,7 @@ The downloaded QFED CO<sub>2</sub> emissions from **Step 1**, and:\
 
 Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios. \
 ;   To run type {options in curly braces}: \
-;         ncl {year=<value>} combine_qfed_finn_ers_hires.ncl
+;         ncl {year=\<value\>} combine_qfed_finn_ers_hires.ncl
 
 ## Step 3:
 Redistribute species based on distribution factors.\
