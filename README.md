@@ -11,7 +11,13 @@ https://portal.nccs.nasa.gov/datashare/iesa/aerosol/emissions/QFED/v2.6r1/0.1/QF
 Remember to change paths as necessary.
 
 ## Step 2:
-Convert CO2 emissions to all other species needed, using emission ratios determined from FINN emission factor tables and VOC speication tables. These have been aggregated into the four QFED vegetation types. Requires: \
+Convert CO2 emissions to all other species needed, using emission ratios determined from FINN emission factor tables and VOC speication tables. These have been aggregated into the four QFED vegetation types:\
+;         1: Savanna Grasslands\
+;         2: Shrublands/Savanna\
+;         3: Tropical Forest\
+;         4: Extratropical Forest
+
+Requires: \
 The downloaded QFED CO2 emissions from **Step 1**, and:\
 ``BASEEmissionFactors_20221227.csv`` \
 ``VOC_EmissionSpeciation_20190318.csv`` \
