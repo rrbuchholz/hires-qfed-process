@@ -21,7 +21,7 @@ Requires: \
 The downloaded QFED CO2 emissions from **Step 1**, and:\
 ``BASEEmissionFactors_20221227.csv`` \
 ``VOC_EmissionSpeciation_20190318.csv`` \
-``species_molwts.txt`` \
+``species_molwts.txt`` 
 
 Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios. \
 ;   To run type {options in curly braces}: \
@@ -31,7 +31,7 @@ Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios
 Redistribute species based on distribution factors.\
 ;   To run type:\
 ;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"'  \\ \
-;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl \
+;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl 
 
 ## Step 4:
 Upload to glade filesystem.
