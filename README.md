@@ -18,7 +18,7 @@ Convert CO<sub>2</sub> emissions to all other species needed, using emission rat
 ;         4: Extratropical Forest
 
 Requires: \
-The downloaded QFED CO2 emissions from **Step 1**, and:\
+The downloaded QFED CO<sub>2</sub> emissions from **Step 1**, and:\
 ``BASEEmissionFactors_20221227.csv`` \
 ``VOC_EmissionSpeciation_20190318.csv`` \
 ``species_molwts.txt`` 
