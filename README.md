@@ -36,6 +36,9 @@ Redistribute species based on distribution factors.\
 ;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"'  \\ \
 ;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl 
 
+There are 5 tracer types this needs to happen for:\
+OC, BC, VBS, SOAG, SO4
+
 Summary of this processing step depending on tracer choice:\
 |   split OC or BC into 2 files:  |     tracer choice |
 | --------------------------------|-------------------|
@@ -54,7 +57,7 @@ Summary of this processing step depending on tracer choice:\
 |           so4_a1                |       SO4         |
 |           num_so4               |       SO4         |
 
-*** Needs to be split into 2 processing parts for highres.
+*** Needs to be split into 2 processing parts for highres for the SVOC.
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem. Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.)
