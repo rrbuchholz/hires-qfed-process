@@ -27,7 +27,7 @@ Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO<sub>2</sub> with emis
 To run type {options in curly braces}:
    >     ncl {year=\<value\>} combine_qfed_finn_ers_hires.ncl
 
-Default year is 2023. The timing takes about **5 minutes per species**. Plan on this step taking about 3.5 hours.\
+Default year is 2023. The timing takes about **~5 minutes per species**. Plan on this step taking about 3.5 hours.\
 Emission factor method: CO2, CO, CH4, NH3, SO2, OC, BC, NO, NO2, NMHC, BENZENE, C2H2, C2H4, C2H6, C3H6, C3H8, CH2O, CH3CHO, CH3COCH3, CH3COOH, CH3OH, DMS, GLYALD, HCN, HCOOH, ISOP, MACR, MEK, MVK, TOLUENE, XYLENES \
 VOC speciation method: BIGALD, BIGALK, BIGENE, TERPENES, C2H5OH, CH3CN, CH3COCHO, CRESOL, HYAC
 
