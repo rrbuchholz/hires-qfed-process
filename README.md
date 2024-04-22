@@ -32,8 +32,8 @@ Default year is 2023.
 ## Step 3:
 Redistribute species based on distribution factors.\
 ;   To run type:\
-;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"'  \\ \
-;             'emiss_type="from_co2"' $codehome/redistribute_emiss.ncl 
+;        ``ncl  year=$year '{tracer="<value>"}' 'outres="hires"'  \\ \
+;             'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl ``
 
 There are 5 tracer types this needs to happen for:\
 OC, BC, VBS, SOAG, SO4
