@@ -42,7 +42,7 @@ To run type:
 There are 5 tracer types this needs to happen for:\
 OC, BC, VBS, SOAG, SO4
 
-Summary of this processing step depending on tracer choice:\
+Summary of this processing step depending on tracer choice:
 |   split OC or BC into 2 files:  |     tracer choice |
 | --------------------------------|-------------------|
 |           OC1 50%, OC2 50%      |       OC          |
