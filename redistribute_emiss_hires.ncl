@@ -487,12 +487,12 @@ begin
 ;DEBUG
 print(e_file_in(0))
 print(emis_dir+outfilename)
-print("0*****************")
+;print("0*****************")
       system("cp "+e_file_in(0)+" "+emis_dir+outfilename)
       ; open the new file to overwrite
       fout = addfile(emis_dir+outfilename, "w")
 ;DEBUG
-print("1*****************")
+;print("1*****************")
       ;------------
       ; File 
       ; Attributes
