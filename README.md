@@ -31,7 +31,7 @@ Default year is 2023. The timing takes about **5 minutes per species**. Plan on 
 Emission factor method: CO2, CO, CH4, NH3, SO2, OC, BC, NO, NO2, NMHC, BENZENE, C2H2, C2H4, C2H6, C3H6, C3H8, CH2O, CH3CHO, CH3COCH3, CH3COOH, CH3OH, DMS, GLYALD, HCN, HCOOH, ISOP, MACR, MEK, MVK, TOLUENE, XYLENES \
 VOC speciation method: BIGALD, BIGALK, BIGENE, TERPENES, C2H5OH, CH3CN, CH3COCHO, CRESOL, HYAC
 
-At the end of this step, you should have XX emisison files.
+At the end of this step, you should have XX emission files.
 
 ## Step 3:
 Redistribute species based on distribution factors.\
@@ -61,6 +61,8 @@ Summary of this processing step depending on tracer choice:\
 |           num_so4               |       SO4         |
 
 *** Needs to be split into 2 processing parts for highres for the SVOC.
+
+At the end of this step, you should have XX emission files.
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem:
