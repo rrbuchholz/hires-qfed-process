@@ -32,7 +32,7 @@ Default year is 2023.
 ## Step 3:
 Redistribute species based on distribution factors.\
 To run type:
-   >     ncl  year=$year '{tracer="<value>"}' 'outres="hires"'  \\ 
+   >     ncl  year=$year '{tracer="\<value\>"}' 'outres="hires"'  \\ 
    >         'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl 
 
 There are 5 tracer types this needs to happen for:\
@@ -60,6 +60,6 @@ Summary of this processing step depending on tracer choice:\
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem.
-> scp /data16b/buchholz/emissions/qfed_v2.6/cam_hires/from_co2/2023/* <username>\@data-access.ucar.edu:/glade/campaign/acom/acom-weather/MUSICA/emissions/qfed2.6_finn/f0.1/
+> scp /data16b/buchholz/emissions/qfed_v2.6/cam_hires/from_co2/2023/* \<username\>\@data-access.ucar.edu:/glade/campaign/acom/acom-weather/MUSICA/emissions/qfed2.6_finn/f0.1/
 
 Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA Wiki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
