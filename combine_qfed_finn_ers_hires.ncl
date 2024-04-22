@@ -9,12 +9,12 @@
 ;   - Calculate emission factors
 ;   - Multiply CO2 by emission factors for each species
 ;      and change units to molec/cm^2/s
-;   - Regrid from 0.1 x 0.1 to high resolution
-;   - Regrid lon gridding,
+;   - Regrid from 0.1 x 0.1 if necessary
+;   - Longitude notes:
 ;          -180 to 180 qfed : 0 to 360 CAM-chem
 ;   - Write out to netCDF - one file per tracer per year
 ;                         - kept at daily time resolution
-;   - changed to use base emission factors for relevant VOCs
+;   - use base emission factors for relevant VOCs
 ;     rather than NMOC x a scaling factor
 ;   
 ;   To run type {options in curly braces}:
@@ -49,20 +49,14 @@ begin
   outres = "hires"                 ; "0.9x1.25" , "hires" 
   ratio_species = "co2"
   species = "CO2"
-  outpath = "/net/modeling1/data16b/buchholz/emissions/qfed_v2.6/cam_"+outres+"/from_"+ratio_species+"/"+qfed_version+"/"+year+"/"
+  outpath = "/net/modeling1/data16b/buchholz/emissions/qfed_v2.6/cam_"+outres+"/from_"+ratio_species+"/"+year+"/"
 
 
   ; -------------------------------
   ; QFED input files
   ; -------------------------------
-  ; for hires
-  if (outres.eq."hires") then
-    qfed_dir = "/net/modeling1/data16b/buchholz/emissions/qfed_v2.6/orig_0.1/"+year+"/"
-    qfed_files = systemfunc ("ls "+qfed_dir+"*_co2.*"+year+"*.nc4")
-  else
-    qfed_dir = "/net/modeling1/data16b/buchholz/emissions/qfed_v2.6/orig_0.25/"+ratio_species+"_"+year+"/"
-    qfed_files = systemfunc ("ls "+qfed_dir+"*"+year+"*.nc4")
-  end if
+  qfed_dir = "/net/modeling1/data16b/buchholz/emissions/qfed_v2.6/orig_0.1/"+year+"/"
+  qfed_files = systemfunc ("ls "+qfed_dir+"*_co2.*"+year+"*.nc4")
 
 ;DEBUG
 print(qfed_files)
@@ -84,7 +78,7 @@ print(qfed_files)
   ; MOZART molecular weights
   ; copied from the model
   ; -------------------------------
-  molwts = "/net/modeling1/home/buchholz/data/species_molwts.txt"
+  molwts = "species_molwts.txt"
 
 ;--------------------------------------------
 ; end user input
@@ -228,6 +222,7 @@ print(qfed_files)
   ; QFED load
   ; -------------------------------
     fin = addfiles(qfed_files, "r")            ; read in
+    ;fin = addfiles(qfed_files(0:3), "r")        ; read in test
     ListSetType (fin, "cat") 
       co2_all          = fin[:]->$qfed_co2$
       co2_trop         = fin[:]->$qfed_co2_trop$
@@ -278,6 +273,7 @@ print(qfed_files)
   ; Extratropical Forest     co2_trop
 
   do tracer = 0,dimsizes(var_names)-1
+  ;do tracer = dimsizes(var_names)-1,dimsizes(var_names)-1
     if (var_names(tracer).eq."NMOC".or.\
         var_names(tracer).eq."NMHC".or.\
         var_names(tracer).eq."ignore".or.\
@@ -320,13 +316,16 @@ print(qfed_files)
      opt    = False
 
      if (outres.eq."hires") then
-       emiss_regrid := tracer_emiss
+       emiss_regrid := lonFlip(tracer_emiss)
        wgt_CAM := wgt_QFED
      else
        emiss_regrid  := area_conserve_remap_Wrap(tracer_emiss&lon,tracer_emiss&lat, \
                                          tracer_emiss , \
-                                         newlon, newlat, opt)  ; (ntim,96,144)
+                                         newlon, newlat, opt)
      end if
+
+;DEBUG
+;printVarSummary(emiss_regrid)
 
      ;--- sanity check
      SumOrigGrid = wgt_areasum2 (tracer_emiss , wgt_QFED, 0)
@@ -341,7 +340,7 @@ print(qfed_files)
      print(date(zero_ind))
      PercDiff = (SumDiff(nonzero_ind)/SumOrigGrid(nonzero_ind))*100
      print("-------------------------------------------------")
-     print("lowres: "+SumOrigGrid+", highres: "+Sum_Regrid)
+     print("orig: "+SumOrigGrid+", for CAM: "+Sum_Regrid)
    else
      PercDiff = (SumDiff/SumOrigGrid)*100
    end if
@@ -373,7 +372,7 @@ print(qfed_files)
       fAtt                      = True
         fAtt@molecular_weight   = mw
         fAtt@conventions        = "CF"
-        fAtt@history            = species+" is from QFED, Level3b v2.6 "+\
+        fAtt@history            = species+" is from QFED, Level3b v2.6 r1 "+\
                                   "(qfed-2.6) Gridded Emission Estimates, with "+\
                                   "FINN emission ratios applied"
         fAtt@author             = "R. R. Buchholz (buchholz@ucar.edu)"
@@ -526,14 +525,16 @@ print(qfed_files)
     ; -------------------------------
      opt    = False
      if (outres.eq."hires") then
-       voc_emiss_regrid := voc_tracer_emiss
+       voc_emiss_regrid := lonFlip(voc_tracer_emiss)
        wgt_CAM := wgt_QFED
      else
      voc_emiss_regrid  := area_conserve_remap_Wrap(voc_tracer_emiss&lon,voc_tracer_emiss&lat, \
                                          voc_tracer_emiss , \
-                                         newlon, newlat, opt)  ; (ntim,96,144)
+                                         newlon, newlat, opt)
      end if
-    ; printVarSummary(voc_emiss_regrid)
+
+; DEBUG
+; printVarSummary(voc_emiss_regrid)
 
      ;--- sanity check
      SumOrigGrid_voc = wgt_areasum2 (voc_tracer_emiss , wgt_QFED, 0) 
@@ -546,7 +547,7 @@ print(qfed_files)
      nonzero_ind = ind(SumOrigGrid_voc.ne.0)
      PercDiff_voc = (SumDiff_voc(nonzero_ind)/SumOrigGrid_voc(nonzero_ind))*100
      print("-------------------------------------------------")
-     print("lowres: "+SumOrigGrid_voc+", highres: "+Sum_Regrid_voc)
+     print("orig: "+SumOrigGrid_voc+", for CAM: "+Sum_Regrid_voc)
    else
      PercDiff_voc = (SumDiff_voc/SumOrigGrid_voc)*100
    end if
@@ -577,7 +578,7 @@ print(qfed_files)
       fAtt                      = True
         fAtt@molecular_weight   = mw_voc
         fAtt@conventions        = "CF"
-        fAtt@history            = species+" is from QFED, Level3b v2.6 "+\
+        fAtt@history            = species+" is from QFED, Level3b v2.6 r1"+\
                                   "(qfed-2.6) Gridded Emission Estimates, with "+\
                                   "FINN emission ratios applied"
         fAtt@author             = "R. R. Buchholz (buchholz@ucar.edu)"
@@ -688,7 +689,7 @@ print(qfed_files)
       panel_res@txString            = "QFED "+ tracername +" emissions"
       ;panel_res@txString            = "QFED "+ voc_tracername +" emissions"
       panel_res@gsnPanelLabelBar    = True                ; add common colorbar
-      panel_res@gsnPanelFigureStrings = (/"qfed high res","qfed low res"/)
+      panel_res@gsnPanelFigureStrings = (/"qfed high res","qfed for CAM"/)
 
     gsn_panel(wks,(/map1,map2/),(/2,1/),panel_res)
 

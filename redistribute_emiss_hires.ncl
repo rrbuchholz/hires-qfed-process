@@ -4,7 +4,6 @@
 ;
 ; Concepts illustrated:
 ;   - Currently default configured to work with QFED emissions
-;   - Can choose GFAS
 ;   - load CAM emission files
 ;   Do one of the following processes
 ;   - split OC or BC into 2 files:       tracer choice
@@ -22,12 +21,12 @@
 ;           num_so4                       SO4
 ;   
 ;   To run type:
-;        ncl  year=$year 'tracer="BC"' 'outres="0.9x1.25"' \
+;        ncl  year=$year 'tracer="BC"' 'outres="hires"' \
 ;             'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl
 ;
 ;   Requires:
 ;         emission file/s
-;                                  RRB March 1, 2018
+;                                  RRB April 21, 2023
 ;=======================================================;
 ; load the libraries
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
@@ -39,52 +38,39 @@ begin
 ;--------------------------------------------
 ; user input
 ;--------------------------------------------
+  repo = "QFED"
+
     if (.not. isvar("year")) then      ; is year=<YYYY> from command line?
-       year = "2016"
+       year = "2023"
     end if
 
     if (.not. isvar("tracer")) then    ; is tracer=<name> from command line?
-       tracer = "VBS"
+       tracer = "BC"
     end if
 
     if (.not. isvar("outres")) then     ; is outres=<name> from command line?
-         outres = "hires"            ; native_res, 0.9x1.25
+         outres = "hires"
     end if
 
     if (.not. isvar("emiss_type")) then  ; is emiss_type=<name> from command line?
          emiss_type = "from_co2"         ; from_co, from_co2, regridded
     end if
 
-    if (.not. isvar("GFAS")) then  ; default is QFED processing
-         GFAS = False
-         repo = "QFED"
+    if (.not. isvar("SUBSETA")) then  ; default is QFED processing
+         SUBSETA = False
     end if
 
-    if (.not. isvar("SUBSET")) then  ; default is QFED processing
-         SUBSET = False
+    if (.not. isvar("SUBSETB")) then  ; default is QFED processing
+         SUBSETB = False
     end if
 
   ; -------------------------------
   ; input emission files
   ; -------------------------------
-  top_dir = "/data14b/buchholz/"
-  ;top_dir = "/data14b/buchholz/"
+  top_dir = "/data16b/buchholz/"
   f_ext = "qfed.emis_"
-  if (GFAS) then
-    repo = "GFAS"
-    f_ext = "gfas.emis_fromgrib_"
-    emis_dir = top_dir+ "gfas/cam_"+outres+"/"+emiss_type+"/"+year+"/"
-  else ; QFED setup
-    if (emiss_type.eq."regridded") then
-      emis_dir = top_dir+ "qfed/cam_"+outres+"/"+emiss_type+"/"+year+"/"
-    else if (outres.eq."hires") then
-      emis_dir = top_dir+ "qfed/cam_hires/"+emiss_type+"/v2.5/"+year+"/"
-      outres = "hires"
-    else
-      emis_dir = top_dir+ "qfed/cam_"+outres+"/"+emiss_type+"/v2.5/"+year+"/"
-    end if
-    end if
-  end if
+  emis_dir = top_dir+ "emissions/qfed_v2.6/cam_hires/"+emiss_type+"/"+year+"/"
+
 
   ; OC/BC
   if (tracer.eq."OC".or.tracer.eq."BC")
@@ -92,15 +78,18 @@ begin
   ; VBS
   else if (tracer.eq."VBS") then
     pom_file_in = emis_dir+f_ext+"pom_a4_"+outres+"_mol_"+year+".nc"
-    if (SUBSET) then
      ;specs_ivoc = (/"C3H6", "C3H8", "C2H6", "C2H4", "BIGENE", "BIGALK", "CH3COCH3", \
      ;              "MEK", "CH3CHO", "CH2O", "BENZENE", "TOLUENE", "XYLENES"/)
+     ; For High resolution need to split these into two groups to process
+    if (SUBSETA) then
      ; IVOCA
      specs_ivoc := (/"C3H6", "C3H8", "C2H6", "C2H4", "BIGENE", "BIGALK"/)
+    else if (SUBSETB) then
      ; IVOCB
-     ;specs_ivoc := (/"CH3COCH3","MEK", "CH3CHO", "CH2O", "BENZENE", "TOLUENE", "XYLENES"/)
+     specs_ivoc := (/"CH3COCH3","MEK", "CH3CHO", "CH2O", "BENZENE", "TOLUENE", "XYLENES"/)
     else
      specs_ivoc := (/"IVOCA", "IVOCB"/)
+    end if
     end if
     e_file_in = new(dimsizes(specs_ivoc), string)
     do i = 0, dimsizes(specs_ivoc)-1
@@ -168,15 +157,17 @@ begin
   else if (tracer.eq."VBS") then
     mw_ivoc = 184.36
     mw_svoc = 310.
-    if (SUBSET) then
      ;C3H6,C3H8,C2H6,C2H4,BIGENE,BIGALK,CH3COCH3,MEK,CH3CHO,CH2O,BENZENE,TOLUENE,XYLENES
       ;mws_voc = (/42., 44., 30., 28., 56., 72., 58., 72., 44., 30., 78., 92., 126./)
+    if (SUBSETA) then
       ;IVOCA: C3H6,C3H8,C2H6,C2H4,BIGENE,BIGALK
-      ;mws_voc = (/42., 44., 30., 28., 56., 72./)
+      mws_voc = (/42., 44., 30., 28., 56., 72./)
+    else if (SUBSETB) then
       ;IVOCB: CH3COCH3,MEK,CH3CHO,CH2O,BENZENE,TOLUENE,XYLENES
-      ;mws_voc = (/58., 72., 44., 30., 78., 92., 126./) 
+      mws_voc = (/58., 72., 44., 30., 78., 92., 126./) 
     else
       print("Combining IVOCA and IVOCB")
+    end if
     end if
     mw_pom = 12.011
   ; SOAG
@@ -210,7 +201,7 @@ begin
           exit
         end if
       emiss_in         = fin->$fire_emiss$
-      if (SUBSET) then
+      if ((SUBSETA) .or. (SUBSETB)) then
       ; Process IVOC in subsets
       ; IVOCA and IVOCB for hires
       emiss_in_array = new((/dimsizes(emiss_in(:,0,0)), dimsizes(emiss_in(0,:,0)),\
@@ -301,7 +292,7 @@ begin
 
   if (tracer.eq."VBS") then
 
-    if (SUBSET) then
+    if ((SUBSETA) .or. (SUBSETB)) then
       ; IVOC
        mass_emiss_1 = emiss_in_array*0
       do i = 0, dimsizes(specs_ivoc)-1
@@ -390,11 +381,7 @@ begin
     ; create file for each 
     ; split CAM-chem species
     ;-------------------
-    if (GFAS) then
-      outfilename = "gfas.emis_fromgrib_"+new_names(i)+"_"+outres+"_mol_"+year+".nc"
-    else 
-      outfilename = "qfed.emis_"+new_names(i)+"_"+outres+"_mol_"+year+".nc"
-    end if
+    outfilename = "qfed.emis_"+new_names(i)+"_"+outres+"_mol_"+year+".nc"
 
       ; copy file to new file
 print(e_file_in(0))
@@ -417,17 +404,9 @@ print("2*****************")
      ; overwrite the title and date
         fout@creation_date      = systemfunc ("date")
 print("3*****************")
-        if (emiss_type.eq."regridded") then
-          fout@title              = "Emissions of "+ new_names(i)+\
-                                  "QFED CO2, daily"
-        else if (GFAS) then
-          fout@title              = "Emissions of "+ new_names(i)+\
-                                  "GFAS, daily"
-        else 
-          fout@title              = "Emissions of "+ new_names(i)+\
-                                  " from FINN v1.6 emission x QFED CO2, daily"
-        end if
-        end if
+        fout@title              = "Emissions of "+ new_names(i)+\
+                                 " from FINN v1.5 emission x QFED v2.6 r1 CO2, daily"
+
 print("4*****************")
         if (new_names(i).eq."num_pom_a4".or.new_names(i).eq."num_bc_a4".or.\
             new_names(i).eq."num_so4_a1") then
@@ -462,7 +441,7 @@ print("4*****************")
       ;------------
         if (new_names(i).eq."SOAG") then
            bb_emissions := new_emiss(:,:,:) ; only one output
-        else if (outres.eq."native_res".or.outres.eq."hires")
+        else if (outres.eq."hires")
            bb_emissions := new_emiss(:,:,:) ; only one output because of segmentation fault
            ;bb_emissions := new_emiss(i,:,:,:)
         else
@@ -544,9 +523,6 @@ print("4*****************")
 
     map2 = gsn_csm_contour_map_ce(wks,bb_emissions(plot_ind,:,:),mapres)
 
-   ;   mapres@gsnLeftString            = "global average difference = "+\
-   ;                                      sprintf("%2.2f",PercDiff(plot_ind))+"%"   ; change left title
-   ; map3 = gsn_csm_contour_map_ce(wks,emiss_diff(plot_ind,:,:),mapres)
 
     gsn_panel(wks,(/map1,map2/),(/2,1/),panel_res)
   end if    ; PLOT
