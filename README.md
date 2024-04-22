@@ -24,15 +24,15 @@ The downloaded QFED CO<sub>2</sub> emissions from **Step 1**, and:\
 ``species_molwts.txt`` 
 
 Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios. \
-To run type {options in curly braces}: \
+To run type {options in curly braces}:
    >     ncl {year=\<value\>} combine_qfed_finn_ers_hires.ncl
 
 Default year is 2023.
 
 ## Step 3:
 Redistribute species based on distribution factors.\
-To run type:\
-   >     ncl  year=$year '{tracer="<value>"}' 'outres="hires"'  \\ \
+To run type:
+   >     ncl  year=$year '{tracer="<value>"}' 'outres="hires"'  \\ 
    >         'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl 
 
 There are 5 tracer types this needs to happen for:\
@@ -59,6 +59,7 @@ Summary of this processing step depending on tracer choice:\
 *** Needs to be split into 2 processing parts for highres for the SVOC.
 
 ## Step 4:
-Upload the 0.1 degree files to glade filesystem.\
->\
+Upload the 0.1 degree files to glade filesystem.
+>
+
 Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA Wiki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
