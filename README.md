@@ -27,7 +27,7 @@ Use ``combine_qfed_finn_ers_hires.ncl`` to combine QFED CO2 with emission ratios
 To run type {options in curly braces}:
    >     ncl {year=\<value\>} combine_qfed_finn_ers_hires.ncl
 
-Default year is 2023. The timing takes about **5 minutes per species**.
+Default year is 2023. The timing takes about **5 minutes per species**. Go away and make yourself a cup of tea.
 
 ## Step 3:
 Redistribute species based on distribution factors.\
