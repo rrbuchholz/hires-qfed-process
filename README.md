@@ -60,7 +60,7 @@ Summary of this processing step depending on tracer choice:
 |           so4_a1                |       SO4         |
 |           num_so4               |       SO4         |
 
-*** Needs to be split into 2 processing parts for highres for the SVOC.
+*** Needs to be split into 2 processing parts for highres for the IVOC.
 
 At the end of this step, you should have XX emission files.
 
