@@ -273,7 +273,7 @@ print(qfed_files)
   ; Extratropical Forest     co2_trop
 
   do tracer = 0,dimsizes(var_names)-1
-  ;do tracer = dimsizes(var_names)-1,dimsizes(var_names)-1
+  ;do tracer = dimsizes(var_names)-2,dimsizes(var_names)-1   ;if need to redo the end of list
     if (var_names(tracer).eq."NMOC".or.\
         var_names(tracer).eq."NMHC".or.\
         var_names(tracer).eq."ignore".or.\

@@ -22,7 +22,8 @@
 ;   
 ;   To run type:
 ;        ncl  year=$year 'tracer="BC"' 'outres="hires"' \
-;             'emiss_type="from_co2"' $codehome/redistribute_emiss_hires.ncl
+;             'emiss_type="from_co2"' 'PROCESSNUM=Y' \
+;              $codehome/redistribute_emiss_hires.ncl
 ;
 ;   Requires:
 ;         emission file/s
@@ -63,6 +64,12 @@ begin
     if (.not. isvar("SUBSETB")) then  ; default is QFED processing
          SUBSETB = False
     end if
+
+    if (.not. isvar("PROCESSNUM")) then  ; default is QFED processing
+         PROCESSNUM = 1
+    end if
+
+
 
   ; -------------------------------
   ; input emission files
@@ -247,36 +254,99 @@ begin
 ; OC and BC -> split into two files, 
 ; create VBS species and num_* species
   if (tracer.eq."OC".or.tracer.eq."BC") then
-    if (tracer.eq."OC") then
-      emiss_split_1 = 0.5 * emiss_in
-      emiss_split_2 = 0.5 * emiss_in
-      ; Primary organic matter is organic carbon plus
-      ; all the other present elements (e.g N, O, H etc.)
-      emiss_new = 1.4 * emiss_in
-      mass_particle = rho_OC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
-      ; to write out
-      new_names = (/"OC1","OC2", "pom_a4", "num_pom_a4"/)
-    else if (tracer.eq."BC") then
-      emiss_split_1 = 0.8 * emiss_in
-      emiss_split_2 = 0.2 * emiss_in
-      emiss_new = emiss_in
-      mass_particle = rho_BC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
-      new_names = (/"CB1","CB2", "bc_a4", "num_bc_a4"/)
-    end if
-    end if
-    ; CESM scales emissions by amufac when read in
-    ; (to convert molec/cm2/s to kg/m2/s)
-    ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
-    ; therefore number emissions files are also scaled by 1/amufac
-    num_emiss = emiss_in * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
-    
+
     if (outres.eq."hires") then
-      ;new_names = (/"OC1","OC2", "pom_a4", "num_pom_a4"/)
-      ;new_names = (/"CB1","CB2", "bc_a4", "num_bc_a4"/)
-      ;new_emiss = (/emiss_split_1, emiss_split_2, emiss_new, num_emiss/)
-      new_names := (/"num_bc_a4"/)
-      new_emiss = (/num_emiss/)
+      ; namelist
+      if (tracer.eq."OC") then
+        new_names_arr = (/"OC1","OC2", "pom_a4", "num_pom_a4"/)
+      else if (tracer.eq."BC") then
+        new_names_arr = (/"CB1","CB2", "bc_a4", "num_bc_a4"/)
+      end if
+      end if
+
+      if (PROCESSNUM.eq.1) then
+         if (tracer.eq."OC") then
+           emiss_split_1 = 0.5 * emiss_in
+         else if (tracer.eq."BC") then
+           emiss_split_1 = 0.8 * emiss_in
+         end if
+         end if
+
+         new_names := new_names_arr(0)
+         new_emiss = (/emiss_split_1/)
+
+      else if (PROCESSNUM.eq.2) then
+         if (tracer.eq."OC") then
+           emiss_split_2 = 0.5 * emiss_in
+         else if (tracer.eq."BC") then
+           emiss_split_2 = 0.2 * emiss_in
+         end if
+         end if
+
+         new_names := new_names_arr(1)
+         new_emiss = (/emiss_split_2/)
+
+      else if (PROCESSNUM.eq.3) then
+         if (tracer.eq."OC") then
+           ; Primary organic matter is organic carbon plus
+           ; all the other present elements (e.g N, O, H etc.)
+           emiss_new = 1.4 * emiss_in
+         else if (tracer.eq."BC") then
+           emiss_new = emiss_in
+         end if
+         end if
+
+         new_names := new_names_arr(2)
+         new_emiss = (/emiss_new/)
+
+      else if (PROCESSNUM.eq.4) then
+         if (tracer.eq."OC") then
+         ; Primary organic matter is organic carbon plus
+         ; all the other present elements (e.g N, O, H etc.)
+           mass_particle = rho_OC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+         else if (tracer.eq."BC") then
+           mass_particle = rho_BC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+         end if
+         end if
+         ; CESM scales emissions by amufac when read in
+         ; (to convert molec/cm2/s to kg/m2/s)
+         ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
+         ; therefore number emissions files are also scaled by 1/amufac
+         num_emiss = emiss_in * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
+
+         new_names := new_names_arr(3)
+         new_emiss = (/num_emiss/)
+
+      end if
+      end if
+      end if
+      end if
+
     else
+      if (tracer.eq."OC") then
+        emiss_split_1 = 0.5 * emiss_in
+        emiss_split_2 = 0.5 * emiss_in
+        ; Primary organic matter is organic carbon plus
+        ; all the other present elements (e.g N, O, H etc.)
+        emiss_new = 1.4 * emiss_in
+        mass_particle = rho_OC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+        ; to write out
+        new_names = (/"OC1","OC2", "pom_a4", "num_pom_a4"/)
+      else if (tracer.eq."BC") then
+        emiss_split_1 = 0.8 * emiss_in
+        emiss_split_2 = 0.2 * emiss_in
+        emiss_new = emiss_in
+        mass_particle = rho_BC *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+        new_names = (/"CB1","CB2", "bc_a4", "num_bc_a4"/)
+      end if
+      end if
+     
+      ; CESM scales emissions by amufac when read in
+      ; (to convert molec/cm2/s to kg/m2/s)
+      ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
+      ; therefore number emissions files are also scaled by 1/amufac
+      num_emiss = emiss_in * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
+
       ; to write out
       new_emiss = (/emiss_split_1, emiss_split_2, emiss_new, num_emiss/)
     end if
@@ -292,34 +362,42 @@ begin
 
   if (tracer.eq."VBS") then
 
-    if ((SUBSETA) .or. (SUBSETB)) then
-      ; IVOC
-       mass_emiss_1 = emiss_in_array*0
-      do i = 0, dimsizes(specs_ivoc)-1
-        mass_emiss_1(:,:,:,i) = 0.2*emiss_in_array(:,:,:,i) * mws_voc(i) / mw_ivoc
-        print("scaled... "+specs_ivoc(i))
-      end do
-      emiss_comb_1 = dim_sum_n(mass_emiss_1,3)
-    else
-      ; Sum IVOCA and IVOCB
-      emiss_comb_1 = emiss_inA + emiss_inB
-      print("combined... IVOCA and IVOCB")
-    end if
-
-    ;SVOC
-    emiss_comb_2 = 0.6 * emiss_in *mw_pom/mw_svoc
-
     if (outres.eq."hires") then
-      if (SUBSET) then
+      if ((SUBSETA) .or. (SUBSETB)) then
+        ; IVOC
+        mass_emiss_1 = emiss_in_array*0
+        do i = 0, dimsizes(specs_ivoc)-1
+          mass_emiss_1(:,:,:,i) = 0.2*emiss_in_array(:,:,:,i) * mws_voc(i) / mw_ivoc
+          print("scaled... "+specs_ivoc(i))
+        end do
+        emiss_comb_1 = dim_sum_n(mass_emiss_1,3)
+      else
+        ; Sum IVOCA and IVOCB
+        emiss_comb_1 = emiss_inA + emiss_inB
+        print("combined... IVOCA and IVOCB")
+      end if
+
         ; IVOCA and IVOCB first for big files
+      if (SUBSETA) then
         new_names = (/"IVOCA"/)   
         new_emiss = (/emiss_comb_1/)
-      else 
-        ;new_names = (/"IVOC","SVOC"/)
-        ;new_emiss = (/emiss_comb_1, emiss_comb_2/)
-        new_names = (/"IVOC"/)
+      else if (SUBSETB) then
+        new_names = (/"IVOCB"/)   
         new_emiss = (/emiss_comb_1/)
+      else
+        if (PROCESSNUM.eq.1) then
+           new_names := (/"IVOC"/)
+           new_emiss = (/emiss_comb_1/)
+        else if (PROCESSNUM.eq.2) then
+           ;SVOC
+           emiss_comb_2 = 0.6 * emiss_in *mw_pom/mw_svoc
+           new_names := (/"SVOC"/)
+           new_emiss = (/emiss_comb_2/)
+        end if
+        end if
       end if
+      end if
+
     else
       ; to write out
       new_names = (/"IVOC","SVOC"/)
@@ -351,21 +429,43 @@ begin
 ; SO4 created from SO2
 ; Also create num_* species
   if (tracer.eq."SO4") then
-    emiss_so2_new = 0.975 * emiss_in
-    emiss_so4 = 0.025 * emiss_in
-    mass_particle = rho_SO4 *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
-    ; CESM scales emissions by amufac when read in
-    ; (to convert molec/cm2/s to kg/m2/s)
-    ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
-    ; therefore number emissions files are also scaled by 1/amufac
-    num_emiss = emiss_so4 * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
 
     if (outres.eq."hires") then
-      ;new_names = (/"SO2", "so4_a1", "num_so4_a1"/)
-      ;new_emiss = (/emiss_so2_new, emiss_so4, num_emiss/)
-      new_names = (/"num_so4_a1"/)
-      new_emiss = (/num_emiss/)
+      if (PROCESSNUM.eq.1) then
+         emiss_so2_new = 0.975 * emiss_in
+         new_names := (/"SO2"/)
+         new_emiss = (/emiss_so2_new/)
+
+      else if (PROCESSNUM.eq.2) then
+         emiss_so4 = 0.025 * emiss_in
+         new_names := (/"so4_a1"/)
+         new_emiss = (/emiss_so4/)
+
+      else if (PROCESSNUM.eq.3) then
+         mass_particle = rho_SO4 *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+         ; CESM scales emissions by amufac when read in
+         ; (to convert molec/cm2/s to kg/m2/s)
+         ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
+         ; therefore number emissions files are also scaled by 1/amufac
+         num_emiss = emiss_so4 * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
+
+         new_names := (/"num_so4_a1"/)
+         new_emiss = (/num_emiss/)
+
+      end if
+      end if
+      end if
+
     else
+      emiss_so2_new = 0.975 * emiss_in
+      emiss_so4 = 0.025 * emiss_in
+      mass_particle = rho_SO4 *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
+      ; CESM scales emissions by amufac when read in
+      ; (to convert molec/cm2/s to kg/m2/s)
+      ; amufac = 1.65979e-23 = (1E-3kg/g)*(1E4cm2/m2)/Avog
+      ; therefore number emissions files are also scaled by 1/amufac
+      num_emiss = emiss_so4 * mw /mass_particle        ;(particles/cm2/s)(molecules/mole)(g/kg)
+
       ; to write out
       new_names = (/"SO2", "so4_a1", "num_so4_a1"/)
       new_emiss = (/emiss_so2_new, emiss_so4, num_emiss/)
@@ -384,18 +484,15 @@ begin
     outfilename = "qfed.emis_"+new_names(i)+"_"+outres+"_mol_"+year+".nc"
 
       ; copy file to new file
+;DEBUG
 print(e_file_in(0))
 print(emis_dir+outfilename)
-newout = "/net/modeling1/data16b/buchholz/emissions/qfed/cam_hires/2016/"
-print(newout+outfilename)
 print("0*****************")
       system("cp "+e_file_in(0)+" "+emis_dir+outfilename)
       ; open the new file to overwrite
-
-print("1*****************")
-print(emis_dir+outfilename)
       fout = addfile(emis_dir+outfilename, "w")
-print("2*****************")
+;DEBUG
+print("1*****************")
       ;------------
       ; File 
       ; Attributes
@@ -403,11 +500,9 @@ print("2*****************")
      ; should have same file attributes as original emission file
      ; overwrite the title and date
         fout@creation_date      = systemfunc ("date")
-print("3*****************")
         fout@title              = "Emissions of "+ new_names(i)+\
                                  " from FINN v1.5 emission x QFED v2.6 r1 CO2, daily"
 
-print("4*****************")
         if (new_names(i).eq."num_pom_a4".or.new_names(i).eq."num_bc_a4".or.\
             new_names(i).eq."num_so4_a1") then
           fout@data_summary     = "Number of particles of "+tracer+" aerosol emissions for MAM4. Will be scaled by ((1E-3kg/g)*(1E4cm2/m2)/Avog) when read into in CESM2 because model was originally set up to convert molec/cm2/s to kg/m2/s."
@@ -442,7 +537,7 @@ print("4*****************")
         if (new_names(i).eq."SOAG") then
            bb_emissions := new_emiss(:,:,:) ; only one output
         else if (outres.eq."hires")
-           bb_emissions := new_emiss(:,:,:) ; only one output because of segmentation fault
+           bb_emissions := new_emiss(:,:,:) ; only one output at a time because of segmentation fault
            ;bb_emissions := new_emiss(i,:,:,:)
         else
            bb_emissions := new_emiss(i,:,:,:)
