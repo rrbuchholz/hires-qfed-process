@@ -34,7 +34,7 @@ VOC speciation method: BIGALD, BIGALK, BIGENE, TERPENES, C2H5OH, CH3CN, CH3COCHO
 At the end of this step, you should have 39 emission files.
 
 ## Step 3:
-Redistribute species based on distribution factors. Use the bash script to process as a batch as the memory issues mean you need to process one at a time.\
+Redistribute species based on distribution factors. Use the bash script to process as a batch as the memory issues mean you need to process one at a time.
 Use ``batch_redistribute_emiss.sh`` to process the redistribution.
 
 There are 5 tracer types this needs to happen for:\
