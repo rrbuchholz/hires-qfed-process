@@ -64,7 +64,7 @@ At the end of this step, you should have XX emission files.
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem:
-   > scp /data16b/\<username\>/emissions/qfed_v2.6/cam_hires/from_co2/2023/*
+   > scp /data16b/\<username\>/emissions/qfed_v2.6/cam_hires/from_co2/\<year\>/*
    >      \<username\>\@data-access.ucar.edu:/glade/campaign/acom/acom-weather/MUSICA/emissions/qfed2.6_finn/f0.1/\<year\>
 
 Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA Wiki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
