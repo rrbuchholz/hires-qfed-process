@@ -35,7 +35,7 @@ At the end of this step, you should have 39 emission files.
 
 ## Step 3:
 Redistribute species based on distribution factors. Use the bash script to process as a batch as the memory issues mean you need to process one at a time.\
-Use bath_redistribute_emiss.sh
+Use ``batch_redistribute_emiss.sh`` to process the redistribution.
 
 There are 5 tracer types this needs to happen for:\
 OC, BC, VBS, SOAG, SO4
@@ -65,6 +65,6 @@ At the end of this step, you should have XX emission files.
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem:
    > scp /data16b/\<username\>/emissions/qfed_v2.6/cam_hires/from_co2/2023/*
-   >      \<username\>\@data-access.ucar.edu:/glade/campaign/acom/acom-weather/MUSICA/emissions/qfed2.6_finn/f0.1/
+   >      \<username\>\@data-access.ucar.edu:/glade/campaign/acom/acom-weather/MUSICA/emissions/qfed2.6_finn/f0.1/\<year\>
 
 Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA Wiki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
