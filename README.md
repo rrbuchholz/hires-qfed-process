@@ -55,7 +55,7 @@ Summary of this processing step depending on tracer choice:
 |           SVOC        = combined|       VBS ***     |
 |           IVOC        = combined|       VBS ***     |
 |           SOAG        = combined|       SOAG        |
-|           so4_a1                |       SO4         |
+|           so4_a1  = 0.025 * SO2 |       SO4         |
 |           num_so4               |       SO4         |
 
 *** Needs to be split into 2 processing parts for high resolution for the IVOC.
