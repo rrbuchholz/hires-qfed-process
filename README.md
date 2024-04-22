@@ -60,4 +60,4 @@ Summary of this processing step depending on tracer choice:\
 *** Needs to be split into 2 processing parts for highres for the SVOC.
 
 ## Step 4:
-Upload the 0.1 degree files to glade filesystem. Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA WIki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
+Upload the 0.1 degree files to glade filesystem. Process further with MUSICA regridding tools if needed in other resolutions (e.g. MPAS, SE regional refinement, etc.) See the MUSICA Wiki: https://wiki.ucar.edu/display/MUSICA/Regridding+emissions.
