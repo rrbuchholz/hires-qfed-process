@@ -3,6 +3,8 @@ Processing QFED version 2.6 R1 fire emissions, created by NASA, and applying con
 
 Processing is currently set up for the ACOM internal computer system ``modeling1``. Please change paths as necessary.
 
+Latest version released: [![DOI](https://zenodo.org/badge/788673190.svg)](https://zenodo.org/doi/10.5281/zenodo.11051422)
+
 ## Step 1:
 Download the base emissions of CO<sub>2</sub>.
 Use ``get_tracer.sh`` to download the CO<sub>2</sub> emissions for the dates of interest.
