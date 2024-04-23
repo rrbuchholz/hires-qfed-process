@@ -91,9 +91,11 @@ begin
     if (SUBSETA) then
      ; IVOCA
      specs_ivoc := (/"C3H6", "C3H8", "C2H6", "C2H4", "BIGENE", "BIGALK"/)
+     ;specs_ivoc := (/"C3H6", "C3H8"/) ; for testing
     else if (SUBSETB) then
      ; IVOCB
      specs_ivoc := (/"CH3COCH3","MEK", "CH3CHO", "CH2O", "BENZENE", "TOLUENE", "XYLENES"/)
+     ;specs_ivoc := (/"CH3COCH3","MEK"/) ; for testing
     else
      specs_ivoc := (/"IVOCA", "IVOCB"/)
     end if
@@ -227,6 +229,8 @@ begin
         finB = addfile(e_file_in(1), "r")
         emiss_inB    = finB->$fire_emiss$
         print("loaded... "+e_file_in(1))
+        delete(finA)
+        delete(finB)
        end if
     ; SOAG
     else if (tracer.eq."SOAG") then
@@ -247,6 +251,8 @@ begin
     end if
     end if
     end if
+
+    delete(fin)
 
 ;--------------------------------------------
 ; Perform calculations
@@ -371,6 +377,7 @@ begin
           print("scaled... "+specs_ivoc(i))
         end do
         emiss_comb_1 = dim_sum_n(mass_emiss_1,3)
+        delete(mass_emiss_1)
       else
         ; Sum IVOCA and IVOCB
         emiss_comb_1 = emiss_inA + emiss_inB
@@ -416,8 +423,10 @@ begin
     do i = 0, dimsizes(specs_soag)-1
       mass_emiss_1(:,:,:,i) = yields(i)*emiss_in_array(:,:,:,i)*mws_voc(i) / mw_soag
       hist_dummy(i) = str_join((/sprintf("%4.4g", yields(i)),specs_soag(i)/), " x ")
+      print("scaled... "+specs_soag(i))
     end do
     emiss_comb_1 = dim_sum_n(mass_emiss_1,3)
+    delete(mass_emiss_1)
     ; to write out
     new_names = (/"SOAG"/)
     new_emiss = (/emiss_comb_1/)
@@ -442,6 +451,7 @@ begin
          new_emiss = (/emiss_so4/)
 
       else if (PROCESSNUM.eq.3) then
+         emiss_so4 = 0.025 * emiss_in
          mass_particle = rho_SO4 *(PI/6.) *(diam)^3       ;mass per particle (kg/particle)
          ; CESM scales emissions by amufac when read in
          ; (to convert molec/cm2/s to kg/m2/s)
@@ -485,11 +495,15 @@ begin
 
       ; copy file to new file
 ;DEBUG
-print(e_file_in(0))
-print(emis_dir+outfilename)
+;print("----------WRITE OUT")
+;print(e_file_in(0))
+;print(emis_dir+outfilename)
 ;print("0*****************")
+;print("cp "+e_file_in(0)+" "+emis_dir+outfilename)
       system("cp "+e_file_in(0)+" "+emis_dir+outfilename)
       ; open the new file to overwrite
+      checkfile = systemfunc("ls "+emis_dir+outfilename)
+;print("Created template: " + checkfile)
       fout = addfile(emis_dir+outfilename, "w")
 ;DEBUG
 ;print("1*****************")

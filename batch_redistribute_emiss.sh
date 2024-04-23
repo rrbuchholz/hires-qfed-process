@@ -6,9 +6,8 @@
 # data content due to high resolution (0.1 degree)
 #-------------------
 
-#arr=(OC BC SO4 VBS SOAG)       # options
-arr=(VBS SOAG)       # options
-#arr=(OC BC SO4 VBS SOAG SOAG1.5)       # options
+arr=(OC BC SO4 VBS SOAG)       # options
+#arr=(SOAG)       # options
 year_arr=(2023)     # options
 echo ${arr[@]}
 echo ${year_arr[@]}
@@ -38,13 +37,20 @@ for y in ${year_arr[@]} ; do
 
         # Subset files for IVOC then 1 file, 1 file for SVOC
         elif [[ ${x} == "VBS" ]]; then
+          echo "----------------${x}"
+          cp 
           for z in {1..2}; do
             if [[ ${z} == 1 ]]; then
+              # create IVOC subsets
               for s in SUBSETA SUBSETB; do
       	        echo "ncl 'tracer="${x}"' 'outres="hires"' 'year="${y}"' 'PROCESSNUM=${z}' '"${s}"="True"' redistribute_emiss_hires.ncl"
                 ncl 'tracer="'${x}'"' 'outres="hires"' 'year="'${y}'"' 'PROCESSNUM="'${z}'"' ''"${s}"'=True' redistribute_emiss_hires.ncl
               done
+                # combine the IVOC subsets
+      	        echo "ncl 'tracer="${x}"' 'outres="hires"' 'year="${y}"' 'PROCESSNUM=${z}' redistribute_emiss_hires.ncl"
+                ncl 'tracer="'${x}'"' 'outres="hires"' 'year="'${y}'"' 'PROCESSNUM="'${z}'"' redistribute_emiss_hires.ncl
             elif [[ ${z} == 2 ]]; then
+                #SVOC
       	        echo "ncl 'tracer="${x}"' 'outres="hires"' 'year="${y}"' 'PROCESSNUM=${z}' redistribute_emiss_hires.ncl"
                 ncl 'tracer="'${x}'"' 'outres="hires"' 'year="'${y}'"' 'PROCESSNUM="'${z}'"' redistribute_emiss_hires.ncl
             fi
