@@ -60,7 +60,7 @@ Summary of this processing step depending on tracer choice:
 
 *** Needs to be split into 2 processing parts for high resolution for the IVOC.
 
-This step will take approximately 2 hours or more. At the end of this step, you should have 55 emission files.
+This step will take approximately 2 hours or more. At the end of this step, you should have 55 emission files. (Note: not all 55 emission files are needed for simulations, but are produced in the process).
 
 ## Step 4:
 Upload the 0.1 degree files to glade filesystem:
